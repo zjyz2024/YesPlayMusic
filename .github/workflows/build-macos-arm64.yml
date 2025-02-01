@@ -34,7 +34,7 @@ jobs:
         run: yarn electron:build --macos dir:arm64
 
       - name: Upload DMG
-        uses: actions/upload-artifact@v3.1.0
+        uses: actions/upload-artifact@v4
         with:
           name: YesPlayMusic-mac
           path: dist_electron/*.dmg
