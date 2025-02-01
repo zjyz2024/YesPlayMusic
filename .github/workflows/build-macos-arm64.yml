@@ -1,0 +1,41 @@
+name: Build macOS ARM64 DMG
+
+on:
+  push:
+    branches:
+      - master
+    tags:
+      - v*
+  workflow_dispatch:
+
+jobs:
+  release:
+    runs-on: macos-latest
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v3
+        with:
+          submodules: "recursive"
+
+      - name: Install Node.js, NPM and Yarn
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Copy .env file
+        run: cp .env.example .env
+
+      - name: Build macOS ARM64 DMG
+        run: yarn electron:build --macos dir:arm64
+
+      - name: Upload DMG
+        uses: actions/upload-artifact@v3
+        with:
+          name: YesPlayMusic-mac
+          path: dist_electron/*.dmg
+          if-no-files-found: ignore
